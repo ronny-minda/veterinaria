@@ -41,7 +41,7 @@ const Linea = () => {
           <article
             key={key}
             className={`mb-10 flex h-auto w-screen flex-col lg:mb-0 lg:h-80 ${
-              key % 2 == !0 ? "lg:flex-row-reverse" : "lg:flex-row"
+              key % 2 !== 0 ? "lg:flex-row-reverse" : "lg:flex-row"
             }`}
           >
             <div
@@ -103,7 +103,7 @@ const Linea = () => {
                   width: "30px",
                   height: "1px",
                   top: "calc(50% - 1px)",
-                  left: key % 2 == !0 ? "calc(35% - 15px)" : "calc(65% - 15px)",
+                  left: key % 2 !== 0 ? "calc(35% - 15px)" : "calc(65% - 15px)",
                   backgroundColor: "#bc9331",
                 }}
               ></div>
@@ -113,7 +113,7 @@ const Linea = () => {
                   width: "50px",
                   height: "30px",
                   top: "calc(47% - 15px)",
-                  left: key % 2 == !0 ? "calc(10% - 25px)" : "calc(90% - 25px)",
+                  left: key % 2 !== 0 ? "calc(10% - 25px)" : "calc(90% - 25px)",
 
                   fontSize: "30px",
                   color: "#bc9331",

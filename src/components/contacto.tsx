@@ -10,11 +10,11 @@ const Contacto = () => {
     msg: "",
   });
 
-  const inputActivo = (e) => {
+  const inputActivo = (e: any) => {
     setEnvio({ ...envio, [e.target.name]: e.target.value });
   };
 
-  const envioSubmit = async (e) => {
+  const envioSubmit = async (e: any) => {
     e.preventDefault();
     const URL = "http://localhost:3000/api/email";
     const result = await axios.post(URL, envio);
