@@ -41,7 +41,7 @@ model Account {
 
 model Session {
     id           String   @id @default(cuid())
-    sessionToken String   @unique
+    sessionToken String
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -50,7 +50,7 @@ model Session {
 model User {
     id            String    @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?
     emailVerified DateTime?
     image         String?
     accounts      Account[]
@@ -59,7 +59,7 @@ model User {
 
 model VerificationToken {
     identifier String
-    token      String   @unique
+    token      String
     expires    DateTime
 
     @@unique([identifier, token])
