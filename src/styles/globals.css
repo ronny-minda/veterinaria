@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    outline: none;
+    /* font-family: 'Poppins', sans-serif; */
+}
+
+body {
+    overflow-x: hidden;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #bc9331;
+    border-radius: 5px;
+}
+
+body::-webkit-scrollbar {
+    background: #f1f1f1;
+    width: 5px;
+}
+
+.scroll {
+    overflow-x: hidden;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    background: #bc9331;
+    border-radius: 5px;
+}
+
+.scroll::-webkit-scrollbar {
+    background: #f1f1f1;
+    width: 5px;
+}
+
+.wha {
+    animation: wwha 1.5s linear infinite;
+    transform: scale(1);
+    transition: 0.3s transform;
+}
+.wha:hover {
+    transform: scale(1.06);
+}
+@keyframes wwha {
+    0%   {
+        box-shadow: 0px 0px 0px 0px #58ff6f;
+    }
+    100%  {
+        box-shadow: 0px 0px 0px 15px #58ff6e00;
+    }
+  }
+
+
+.uso {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    transition: 1s;
+}
