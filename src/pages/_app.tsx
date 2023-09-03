@@ -7,6 +7,7 @@ import Head from "next/head";
 import Layout from "~/components/layout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

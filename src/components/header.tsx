@@ -17,26 +17,30 @@ import User from "~/svg/user";
 import Face from "~/svg/face";
 import Insta from "~/svg/insta";
 import Wha from "~/svg/wha";
+import { signal } from "@preact/signals-react";
+import { TIENDA, scrollBody } from "~/store/gloval";
+import { useTransition, animated } from "@react-spring/web";
+
+const FondoOpaco = signal(false);
+const estadoMobile = signal(false);
+const estadoTienda = signal(false);
+
+const cambioTienda = () => {
+  estadoTienda.value = !estadoTienda.value;
+  scrollBody.value = !scrollBody.value;
+};
+const cambioMovile = () => {
+  estadoMobile.value = !estadoMobile.value;
+  scrollBody.value = !scrollBody.value;
+};
 
 const Header = () => {
-  const [estadoMobile, setEstadoMobile] = useState(false);
-  const [estadoTienda, setEstadoTienda] = useState(false);
-  const [estadoFavorito, setEstadoFavorito] = useState(false);
-  const [estadoLupa, setEstadoLupa] = useState(false);
-  const [estadoAcceder, setEstadoAcceder] = useState(false);
-  const [estadoAccederCambio, setEstadoAccederCambio] = useState(true);
-
   const { data: session, status } = useSession();
-  console.log("status");
-  console.log(status);
 
-  const favoritos = useFavorito((state) => state.favorito);
-  const tienda = useTienda((state) => state.tienda);
-
-  const botonHamburger = (e: any) => {
-    setEstadoMobile(!estadoMobile);
-    document.body.style.overflowY = "auto";
-  };
+  // const botonHamburger = (e: any) => {
+  //   estadoMobile.value = !estadoMobile.value;
+  //   // document.body.style.overflowY = "auto";
+  // };
 
   const newWindow = async () => {
     const url = "/aut-google";
@@ -50,6 +54,12 @@ const Header = () => {
 
     window.open(url, titulo, opciones);
   };
+
+  const TiendaArray = useTransition(TIENDA.value, {
+    from: { opacity: 0, config: { duration: 500 } },
+    enter: { opacity: 1, config: { duration: 500 } },
+    leave: { opacity: 0, config: { duration: 500 } },
+  });
 
   return (
     <>
@@ -125,30 +135,31 @@ const Header = () => {
 
           <li className="group absolute right-28 top-10 h-auto w-auto cursor-pointer list-none lg:right-5">
             <button
-              className="letas"
+              className="letas h-8 w-8"
               style={{
                 fontSize: "22px",
                 fontWeight: "bold",
               }}
               onClick={() => {
-                setEstadoTienda(!estadoTienda);
-                document.body.style.overflowY = "hidden";
+                cambioTienda();
               }}
             >
               <Tienda
-                className="h-8 w-8 fill-[#a1936500] text-[#7f1d1d] group-hover:fill-[#7f1d1d]"
-                style={{ transitionDuration: "0.1s" }}
-                stroke="currentColor"
+                className="h-full w-full fill-[#39404E] hover:fill-[#B03E3E]"
+                style={{ transitionDuration: "0.4s" }}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={1}
               />
-              <div
-                className="absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f6f3e4]"
-                style={{ fontSize: "15px" }}
-              >
-                {tienda.length}
-              </div>
+              {TIENDA.value.length > 0 && (
+                <>
+                  <div
+                    className="botonSolidColor1 absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full"
+                    style={{ fontSize: "13px" }}
+                  >
+                    {TIENDA.value.length}
+                  </div>
+                </>
+              )}
             </button>
           </li>
 
@@ -160,8 +171,8 @@ const Header = () => {
                 fontWeight: "bold",
               }}
               onClick={() => {
-                setEstadoFavorito(!estadoFavorito);
-                document.body.style.overflowY = "hidden";
+                FondoOpaco.value = !FondoOpaco.value;
+                // document.body.style.overflowY = "hidden";
               }}
             >
               <CorazonSvg
@@ -176,7 +187,7 @@ const Header = () => {
                 className="absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f6f3e4]"
                 style={{ fontSize: "15px" }}
               >
-                {favoritos.length}
+                1{/* {favoritos.length} */}
               </div>
             </button>
           </li>
@@ -189,8 +200,8 @@ const Header = () => {
                 fontWeight: "bold",
               }}
               onClick={() => {
-                setEstadoLupa(!estadoLupa);
-                document.body.style.overflowY = "hidden";
+                FondoOpaco.value = !FondoOpaco.value;
+                // document.body.style.overflowY = "hidden";
               }}
             >
               <Lupa
@@ -226,8 +237,8 @@ const Header = () => {
                   fontSize: "22px",
                 }}
                 onClick={() => {
-                  setEstadoAcceder(!estadoAcceder);
-                  // document.body.style.overflowY = "hidden";
+                  FondoOpaco.value = !FondoOpaco.value;
+                  // // document.body.style.overflowY = "hidden";
                 }}
               >
                 Acceder
@@ -241,54 +252,266 @@ const Header = () => {
         </div>
 
         <div
-          className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full lg:hidden"
+          className="sombra group absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full hover:shadow-slate-200 lg:hidden"
           style={{
-            backgroundColor: "#f6f2e5",
+            transitionDuration: "0.4s",
           }}
           onClick={(e) => {
-            botonHamburger(e);
-            document.body.style.overflowY = "hidden";
+            cambioMovile();
           }}
         >
-          <MenuMobile />
+          <MenuMobile
+            className="h-[25px] w-[25px] fill-[#B03E3E] drop-shadow-[15px_15px_16px_#F000] group-hover:drop-shadow-[15px_15px_17px_#F00]"
+            style={{
+              transitionDuration: "0.2s",
+            }}
+          />
         </div>
       </header>
 
-      {/* MENU */}
+      {/* TIENDA */}
       <AnimatePresence>
-        {estadoMobile && (
+        {estadoTienda.value && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed left-0 top-0 z-40 h-screen w-screen bg-slate-600 lg:hidden"
-            style={{ backgroundColor: "#54545454" }}
-            onClick={(e) => botonHamburger(e)}
+            className="fixed left-0 top-0 z-40 h-screen w-screen bg-slate-600"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.35)" }}
+            onClick={() => {
+              cambioTienda();
+            }}
           ></motion.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence>
-        {estadoMobile && (
+        {estadoTienda.value && (
           <motion.div
             initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 400, opacity: 0 }}
             transition={{ type: "spring", bounce: 0.2 }}
-            className="fixed right-0 top-0 z-50 flex h-full w-2/5 flex-col items-center justify-start bg-white lg:hidden"
+            className="bgFondo fondoPerro1 fixed right-0 top-0 z-50 h-full w-[100%] sm:w-[500px]"
           >
             <div
-              onClick={(e) => botonHamburger(e)}
-              className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
+              onClick={(e) => {
+                cambioTienda();
+              }}
+              className="sombra group absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full hover:shadow-slate-200"
               style={{
                 transitionDuration: "0.4s",
               }}
             >
               <Equiz
-                className=""
+                className="h-[25px] w-[25px] fill-[#B03E3E] drop-shadow-[15px_15px_16px_#F000] group-hover:drop-shadow-[15px_15px_17px_#F00]"
                 style={{
-                  height: "20px",
-                  with: "20px",
+                  transitionDuration: "0.2s",
+                }}
+              />
+            </div>
+
+            <div className="flex h-16 w-full items-center">
+              <h3 className="texto ml-7 text-2xl font-bold">Carrito</h3>
+            </div>
+
+            <div
+              className="scroll mt-10 flex w-full justify-center"
+              style={{ overflowY: "auto", height: "calc(100% - 103.993px)" }}
+            >
+              <ul className="flex w-3/4 flex-col">
+                {TIENDA.value.length !== 0 && (
+                  <>
+                    {TiendaArray((style, item) => {
+                      return (
+                        <animated.li
+                          style={{ ...style }}
+                          className="sombra1 bgFondoOpa mb-6 mt-3 p-3"
+                        >
+                          <div className="group relative flex w-full">
+                            <figure className="relative ml-[32px] mr-2 flex w-20 cursor-pointer flex-col items-center">
+                              <Image
+                                height={1000}
+                                width={1000}
+                                src={item.img}
+                                alt={item.img}
+                                className="h-full w-full object-contain"
+                              />
+                            </figure>
+                            <div className="mx-2 flex flex-col">
+                              <span className="textoColor1 text-base font-bold">
+                                {item.nombre}
+                              </span>
+                              <span className="texto my-2 text-base font-bold">
+                                ${Math.round(item.percio * 0.01 * 100) / 100}
+                              </span>
+                            </div>
+
+                            <div className="mx-2 flex items-start">
+                              <button
+                                className="mx-2"
+                                onClick={() => {
+                                  TIENDA.value = TIENDA.value.map((valor) => {
+                                    if (valor.cantidad > 0) {
+                                      if (valor.id === item.id) {
+                                        valor.cantidad--;
+                                      }
+                                    }
+                                    return valor;
+                                  });
+
+                                  TIENDA.value = TIENDA.value.filter(
+                                    (iten) => iten.cantidad !== 0
+                                  );
+                                }}
+                              >
+                                -
+                              </button>
+                              <span>{item.cantidad}</span>
+                              <button
+                                className="mx-2"
+                                onClick={() => {
+                                  TIENDA.value = TIENDA.value.map((valor) => {
+                                    if (valor.id === item.id) {
+                                      valor.cantidad++;
+                                    }
+                                    return valor;
+                                  });
+                                }}
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            <div className="absolute right-0 top-0 mx-2 flex items-start">
+                              <span className="font-bold">
+                                $
+                                {Math.round(
+                                  item.percio * item.cantidad * 0.01 * 100
+                                ) / 100}
+                              </span>
+                            </div>
+
+                            <div
+                              onClick={() => {
+                                TIENDA.value = TIENDA.value.filter(
+                                  (iten) => iten.id !== item.id
+                                );
+                              }}
+                              className="bgPrimerFondo absolute left-0 top-0 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full shadow-lg shadow-[#fff0] hover:shadow-slate-200"
+                            >
+                              <Equis />
+                            </div>
+                          </div>
+                          <hr className="rayaSombra my-2 border-[#cbc1a0]" />
+                        </animated.li>
+                      );
+                    })}
+                  </>
+                )}
+                {TIENDA.value.length === 0 && (
+                  <>
+                    <div className="flex flex-col items-center justify-center">
+                      <h3 className="texto text-center text-xl font-bold">
+                        No hay nada en Carrito
+                      </h3>
+                      <Link
+                        onClick={() => {
+                          cambioTienda();
+                        }}
+                        href="/tienda"
+                        className="botonSolidColor1 my-2 mt-5 flex w-4/5 items-center justify-center py-3 text-lg"
+                        style={{ transitionDuration: "0.3s" }}
+                      >
+                        Siga Comprando
+                      </Link>
+                    </div>
+                  </>
+                )}
+                <li className="">
+                  <hr className="mb-[165px] border-[#cbc1a0] opacity-0" />
+                </li>
+              </ul>
+            </div>
+
+            {TIENDA.value.length !== 0 && (
+              <>
+                <div
+                  className="absolute bottom-0 left-0 flex h-auto w-full flex-col items-center justify-center bg-white"
+                  style={{
+                    boxShadow: "0px -10px 20px 0px #00000038",
+                  }}
+                >
+                  <div className="my-2 flex w-4/5 items-center justify-around py-2 text-[#7f1d1d]">
+                    <div>Subtotal:</div>
+                    <div>
+                      $
+                      {Math.round(
+                        TIENDA.value.reduce((acumulador, valorActual) => {
+                          return (
+                            acumulador +
+                            valorActual.percio * valorActual.cantidad * 0.01
+                          );
+                        }, 0) * 100
+                      ) / 100}
+                    </div>
+
+                    {/* {Math.round(
+                              item.percio * item.cantidad * 0.01 * 100
+                            ) / 100} */}
+                  </div>
+                  <button className="botonBorderColor1 my-2 flex w-4/5 items-center justify-center py-2">
+                    Ver carrito
+                  </button>
+                  <button
+                    className="botonSolidColor1 my-2 flex w-4/5 items-center justify-center py-2"
+                    style={{ transitionDuration: "0.3s" }}
+                  >
+                    Finalizar compra
+                  </button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* MENU */}
+      <AnimatePresence>
+        {estadoMobile.value && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed left-0 top-0 z-40 flex h-screen w-screen bg-slate-600 lg:hidden"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.35)" }}
+            onClick={() => {
+              cambioMovile();
+            }}
+          ></motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {estadoMobile.value && (
+          <motion.div
+            initial={{ x: 400, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 400, opacity: 0 }}
+            transition={{ type: "spring", bounce: 0.2 }}
+            className="bgFondo fixed right-0 top-0 z-50 flex h-full w-2/5 flex-col items-center justify-start lg:hidden"
+          >
+            <div
+              onClick={(e) => {
+                cambioMovile();
+              }}
+              className="sombra group absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full hover:shadow-slate-200"
+              style={{
+                transitionDuration: "0.4s",
+              }}
+            >
+              <Equiz
+                className="h-[25px] w-[25px] fill-[#B03E3E] drop-shadow-[15px_15px_16px_#F000] group-hover:drop-shadow-[15px_15px_17px_#F00]"
+                style={{
+                  transitionDuration: "0.2s",
                 }}
               />
             </div>
@@ -341,8 +564,8 @@ const Header = () => {
               <li className="group my-5 w-full list-none">
                 <Link
                   onClick={() => {
-                    setEstadoMobile(!estadoMobile);
-                    document.body.style.overflowY = "auto";
+                    cambioMovile();
+                    // document.body.style.overflowY = "auto";
                   }}
                   className="letas block w-full p-1 text-2xl text-[#7f1d1d]"
                   href="/"
@@ -361,8 +584,8 @@ const Header = () => {
               <li className="group my-5 w-full list-none">
                 <Link
                   onClick={() => {
-                    setEstadoMobile(!estadoMobile);
-                    document.body.style.overflowY = "auto";
+                    cambioMovile();
+                    // document.body.style.overflowY = "auto";
                   }}
                   className="letas block w-full p-1 text-2xl text-[#7f1d1d]"
                   href="/galeria"
@@ -381,8 +604,8 @@ const Header = () => {
               <li className="group my-5 w-full list-none">
                 <Link
                   onClick={() => {
-                    setEstadoMobile(!estadoMobile);
-                    document.body.style.overflowY = "auto";
+                    cambioMovile();
+                    // document.body.style.overflowY = "auto";
                   }}
                   className="letas block w-full p-1 text-2xl text-[#7f1d1d]"
                   href="/nosotros"
@@ -401,8 +624,8 @@ const Header = () => {
               <li className="group my-5 w-full list-none">
                 <Link
                   onClick={() => {
-                    setEstadoMobile(!estadoMobile);
-                    document.body.style.overflowY = "auto";
+                    cambioMovile();
+                    // document.body.style.overflowY = "auto";
                   }}
                   className="letas block w-full p-1 text-2xl text-[#7f1d1d]"
                   href="/tienda"
@@ -421,8 +644,8 @@ const Header = () => {
               <li className="group my-5 w-full list-none">
                 <Link
                   onClick={() => {
-                    setEstadoMobile(!estadoMobile);
-                    document.body.style.overflowY = "auto";
+                    cambioMovile();
+                    // document.body.style.overflowY = "auto";
                   }}
                   className="letas block w-full p-1 text-2xl text-[#7f1d1d]"
                   href="/productos"
@@ -444,8 +667,8 @@ const Header = () => {
               <div
                 className="flex cursor-pointer justify-between px-10 py-2"
                 onClick={() => {
-                  setEstadoMobile(!estadoMobile);
-                  setEstadoFavorito(!estadoFavorito);
+                  cambioMovile();
+                  // setEstadoFavorito(!estadoFavorito);
                 }}
               >
                 <div>Lista de deseos</div>
@@ -469,7 +692,7 @@ const Header = () => {
                       className="absolute -bottom-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f6f3e4]"
                       style={{ fontSize: "15px" }}
                     >
-                      {favoritos.length}
+                      0{/* {"favoritos.length"} */}
                     </div>
                   </button>
                 </div>
@@ -478,8 +701,8 @@ const Header = () => {
               <div
                 className="flex cursor-pointer justify-between px-10 py-2"
                 onClick={() => {
-                  setEstadoMobile(!estadoMobile);
-                  setEstadoAcceder(!estadoAcceder);
+                  cambioMovile();
+                  // setEstadoAcceder(!estadoAcceder);
                 }}
               >
                 <div>Acceder</div>
@@ -540,151 +763,8 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      {/* TIENDA */}
-      <AnimatePresence>
-        {estadoTienda && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed left-0 top-0 z-40 h-screen w-screen bg-slate-600"
-            style={{ backgroundColor: "#54545454" }}
-            onClick={(e) => {
-              setEstadoTienda(!estadoTienda);
-              document.body.style.overflowY = "auto";
-            }}
-          ></motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {estadoTienda && (
-          <motion.div
-            initial={{ x: 400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
-            transition={{ type: "spring", bounce: 0.2 }}
-            className="scroll fixed right-0 top-0 z-50 h-full w-[100%] bg-white  sm:w-[500px]"
-            style={{ overflowY: "auto" }}
-          >
-            <div
-              onClick={(e) => {
-                setEstadoTienda(!estadoTienda);
-                document.body.style.overflowY = "auto";
-              }}
-              className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
-              style={{
-                transitionDuration: "0.4s",
-              }}
-            >
-              <Equiz
-                className=""
-                style={{
-                  height: "20px",
-                  with: "20px",
-                }}
-              />
-            </div>
-
-            <div className="flex h-16 w-full items-center bg-[#fff8eca0]">
-              <h3 className="ml-7 text-xl">Carrito</h3>
-            </div>
-
-            <div className="mt-10 flex w-full justify-center">
-              <ul className="flex w-3/4 flex-col">
-                {tienda.map((value, key) => {
-                  return (
-                    <div key={key} className="">
-                      <li className="group relative flex w-full">
-                        <figure className="relative mx-2 flex w-20 cursor-pointer flex-col items-center">
-                          <Image
-                            height={1000}
-                            width={1000}
-                            src={value.img}
-                            alt={value.img}
-                            className="h-full w-full object-contain"
-                          />
-                        </figure>
-                        <div className="mx-2 flex flex-col">
-                          <span className="text-base font-bold text-[#ba9d72]">
-                            {value.nombre}
-                          </span>
-                          <span className="my-2 text-base text-[#ba9d72]">
-                            {value.percio}
-                          </span>
-                          {/* <div className="flex items-center justify-center rounded-full border-2 border-sky-500 text-sky-500">
-                            En stock
-                          </div> */}
-                        </div>
-                        <div className="absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200">
-                          <Equis />
-                        </div>
-                        {/* <div className="mx-2 flex h-full flex-1 flex-col">
-                          <button
-                            className="h-1/2 w-full bg-[#b94a4a] hover:bg-[#e35c5c]"
-                            style={{ transitionDuration: "0.3s" }}
-                          >
-                            Anadir al carrito
-                          </button>
-                          <button
-                            className="h-1/2 w-full text-slate-950 transition-colors hover:text-slate-500"
-                            style={{ transitionDuration: "0.3s" }}
-                          >
-                            Quitar
-                          </button>
-                        </div> */}
-                      </li>
-                      <hr className="my-6 border-[#cbc1a0]" />
-                    </div>
-                  );
-                })}
-              </ul>
-            </div>
-
-            <div
-              className="sticky bottom-0 left-0 flex h-auto w-full flex-col items-center justify-center bg-white"
-              style={{
-                boxShadow: "0px -10px 20px 0px #00000038",
-              }}
-            >
-              <div className="my-2 flex w-4/5 items-center justify-around py-2 text-[#7f1d1d]">
-                <div>Subtotal:</div>
-                <div>$33,89</div>
-              </div>
-              <button className="my-2 flex w-4/5 items-center justify-center border-2 border-[#7f1d1d] py-2 text-[#7f1d1d] hover:border-[#b24242] hover:text-[#b24242]">
-                Ver carrito
-              </button>
-              <button
-                className="my-2 flex w-4/5 items-center justify-center bg-[#7f1d1d] py-2 text-white hover:bg-[#b24242]"
-                style={{ transitionDuration: "0.3s" }}
-              >
-                Finalizar compra
-              </button>
-            </div>
-
-            {/* {tienda.length === 0 ? "" : ""} */}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* FAVORITO */}
-      <AnimatePresence>
-        {estadoFavorito && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed left-0 top-0 z-40 h-screen w-screen bg-slate-600"
-            style={{ backgroundColor: "#54545454" }}
-            onClick={(e) => {
-              setEstadoFavorito(!estadoFavorito);
-              document.body.style.overflowY = "auto";
-            }}
-          ></motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {estadoFavorito && (
           <motion.div
             initial={{ x: 400, opacity: 0 }}
@@ -697,7 +777,7 @@ const Header = () => {
             <div
               onClick={(e) => {
                 setEstadoFavorito(!estadoFavorito);
-                document.body.style.overflowY = "auto";
+                // document.body.style.overflowY = "auto";
               }}
               className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
               style={{
@@ -743,9 +823,6 @@ const Header = () => {
                           <span className="my-2 text-sm text-[#ba9d72]">
                             {value.percio}
                           </span>
-                          {/* <div className="flex items-center justify-center rounded-full border-2 border-sky-500 text-sm text-sky-500">
-                            <div className="m-[5px]">En stock</div>
-                          </div> */}
                         </div>
                         <div className="mx-2 flex h-[100px] flex-1 flex-col items-center justify-center">
                           <button
@@ -767,30 +844,12 @@ const Header = () => {
                 })}
               </ul>
             </div>
-
-            {/* {tienda.length === 0 ? "" : ""} */}
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       {/* LUPA */}
-      <AnimatePresence>
-        {estadoLupa && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed left-0 top-0 z-40 h-screen w-screen bg-slate-600"
-            style={{ backgroundColor: "#54545454" }}
-            onClick={(e) => {
-              setEstadoLupa(!estadoLupa);
-              document.body.style.overflowY = "auto";
-            }}
-          ></motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {estadoLupa && (
           <motion.div
             initial={{ y: -400, opacity: 0 }}
@@ -803,7 +862,7 @@ const Header = () => {
             <div
               onClick={(e) => {
                 setEstadoLupa(!estadoLupa);
-                document.body.style.overflowY = "auto";
+                // document.body.style.overflowY = "auto";
               }}
               className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
               style={{
@@ -865,14 +924,12 @@ const Header = () => {
                 </div>
               </form>
             </div>
-
-            {/* {tienda.length === 0 ? "" : ""} */}
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       {/* ACCEDER */}
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {status === "unauthenticated" ? (
           <>
             {estadoAcceder && (
@@ -884,7 +941,7 @@ const Header = () => {
                 style={{ backgroundColor: "#54545454" }}
                 onClick={(e) => {
                   setEstadoAcceder(!estadoAcceder);
-                  document.body.style.overflowY = "auto";
+                  // document.body.style.overflowY = "auto";
                 }}
               >
                 <div
@@ -943,11 +1000,6 @@ const Header = () => {
                                 className="block w-full border border-gray-300 bg-gray-50 p-2.5 text-gray-900 hover:ring-1 hover:ring-[#8b3737] focus:ring-1 focus:ring-[#8b3737] sm:text-sm"
                               />
                             </div>
-                            {/* {isError && (
-                              <div className="text-white bg-red-700 font-medium text-sm px-5 text-center mr-2 mb-2 ">
-                                {error.response.data.msg}
-                              </div>
-                            )} */}
                             <button
                               type="submit"
                               className="w-full bg-[#8b3737] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#ab4545] active:outline-none active:ring-2"
@@ -1065,11 +1117,6 @@ const Header = () => {
                                 className="block w-full border border-gray-300 bg-gray-50 p-2.5 text-gray-900 hover:ring-1 hover:ring-[#8b3737] focus:ring-1 focus:ring-[#8b3737] sm:text-sm"
                               />
                             </div>
-                            {/* {isError && (
-                              <div className="text-white bg-red-700 font-medium text-sm px-5 text-center mr-2 mb-2 ">
-                                {error.response.data.msg}
-                              </div>
-                            )} */}
                             <button
                               type="submit"
                               className="w-full bg-[#8b3737] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#ab4545] active:outline-none active:ring-2"
@@ -1108,9 +1155,13 @@ const Header = () => {
             )}
           </>
         ) : null}
-      </AnimatePresence>
+      </AnimatePresence> */}
     </>
   );
+};
+
+const Compo = () => {
+  return <></>;
 };
 
 export default Header;

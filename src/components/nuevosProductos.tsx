@@ -33,7 +33,7 @@ const NuevosProductos = () => {
                     className="group relative flex h-64 w-52 cursor-pointer flex-col items-center overflow-hidden"
                     onClick={() => {
                       setDatalles(!datalles);
-                      document.body.style.overflowY = "hidden";
+                      // document.body.style.overflowY = "hidden";
                     }}
                   >
                     <Image
@@ -98,13 +98,13 @@ const NuevosProductos = () => {
                         className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-slate-500 bg-opacity-40"
                         onClick={() => {
                           setDatalles(!datalles);
-                          document.body.style.overflowY = "auto";
+                          // document.body.style.overflowY = "auto";
                         }}
                       >
                         <div
                           onClick={(e) => {
                             setDatalles(!datalles);
-                            document.body.style.overflowY = "auto";
+                            // document.body.style.overflowY = "auto";
                           }}
                           className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
                           style={{

@@ -68,7 +68,7 @@ const Imagenes = ({ value }: { value: string }) => {
         style={{ height: "350px", width: "300px" }}
         onClick={() => {
           setVer(!ver);
-          document.body.style.overflowY = "hidden";
+          // document.body.style.overflowY = "hidden";
         }}
         onMouseEnter={() => serDetalles(true)}
         onMouseLeave={() => serDetalles(false)}
@@ -114,7 +114,7 @@ const Imagenes = ({ value }: { value: string }) => {
             transition={{ duration: 0.5 }}
             onClick={() => {
               setVer(!ver);
-              document.body.style.overflowY = "auto";
+              // document.body.style.overflowY = "auto";
             }}
             className="fixed left-0 top-0 z-50 mb-10 flex h-screen w-screen items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm"
           >
