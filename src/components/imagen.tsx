@@ -2,7 +2,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 
 
-const Imagen = ({src, alt, modo, className}: {src: string, alt: string, modo: string, className: string}) => {
+const Imagen = ({src, alt, modo, className}: {src: string, alt: string, modo: "fill" | "contain" | "cover" | "none" | "scale-down", className: string}) => {
   const [ img, setImg ] = useState(false)
   return (
     <>
@@ -12,7 +12,7 @@ const Imagen = ({src, alt, modo, className}: {src: string, alt: string, modo: st
             initial={{opacity: 0}}
             animate={{opacity: img?1:0}} 
             transition={{delay: 0, duration: 1}}
-            className="absolute top-0 left-0 h-auto w-auto"
+            className="absolute top-0 left-0 w-full h-full"
           >
             <img className={`w-full h-full rounded ${className}`} src={src}
               alt={alt} onLoad={()=> {

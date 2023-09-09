@@ -377,7 +377,7 @@ const CompoTienda = () => {
                               />
                             </figure> */}
                             <div className="ml-[32px] mr-2 flex w-20 h-24 cursor-pointer">
-                              <Imagen src={item.img} alt={item.img} modo={"contain"} />
+                              <Imagen className="" src={item.img} alt={item.img} modo={"contain"} />
                             </div>
                             <div className="mx-2 flex flex-col w-[150px]">
                               <span className="textoColor1 text-base font-bold">
@@ -875,7 +875,7 @@ const CompoFavorito = () => {
                         >
                           <div className="group relative flex w-full">
                             <div className="ml-[32px] mr-2 flex w-20 h-24 cursor-pointer">
-                              <Imagen src={item.img} alt={item.img} modo={"contain"} />
+                              <Imagen className="" src={item.img} alt={item.img} modo={"contain"} />
                             </div>
                             <div className="mx-2 flex flex-col">
                               <span className="textoColor1 text-base font-bold">
@@ -1067,8 +1067,8 @@ const CompoLupa = () => {
                               className="sombra1 bgFondoOpa my-7 p-3 list-none"
                             >
                               <div className="group relative flex w-full">
-                                <div className="ml-[32px] mr-2 flex w-20 h-24 cursor-pointer">
-                                  <Imagen src={value.img}
+                                <div className="ml-[32px] mr-2 flex w-[115px] h-[155px] cursor-pointer">
+                                  <Imagen className="" modo="cover" src={value.img}
                                     alt={value.img} />
                                 </div>
 

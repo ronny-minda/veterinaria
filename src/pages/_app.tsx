@@ -61,14 +61,16 @@ const Fondo = () => {
   });
 
   useEffect(() => {
-    const handleResize = (e: any) => {
-      const y = e.pageY - window.top.scrollY;
-      const x = e.pageX;
-      setPosition({
-        x,
-        y,
-      });
-    };
+    const handleResize = (e: MouseEvent) => {
+      if (window.top) {
+        const y = e.pageY - window.top.scrollY;
+        const x = e.pageX;
+        setPosition({
+          x,
+          y,
+        });
+      };
+      }
 
     window.addEventListener("mousemove", handleResize);
 
