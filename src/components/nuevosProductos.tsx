@@ -24,8 +24,8 @@ const NuevosProductos = () => {
             style={{ maxWidth: "1300px" }}
           >
             {tienda.slice(0, 4).map((value, key) => {
-              console.log("value, key");
-              console.log(value, key);
+              // console.log("value, key");
+              // console.log(value, key);
 
               return (
                 <li key={key} className="m-5 bg-[#f6f2e5] p-2 shadow-md">
@@ -81,7 +81,7 @@ const NuevosProductos = () => {
                   <div className="my-1 text-lg font-bold text-[#8b3737]">
                     {value.nombre}
                   </div>
-                  <div className="mb-2 text-[#521212]">{value.percio}</div>
+                  <div className="mb-2 text-[#521212]">{value.precio}</div>
                   <span
                     className="cursor-pointer border bg-white p-1 text-slate-600 hover:bg-slate-100"
                     style={{ transitionDuration: "0.2s" }}
@@ -154,7 +154,7 @@ const NuevosProductos = () => {
                               {value.nombre}
                             </h3>
                             <div className="mb-3 text-[#c5b892]">
-                              {value.percio}
+                              {value.precio}
                             </div>
                             <p className="mb-3 text-slate-700">{value.des}</p>
                             <button

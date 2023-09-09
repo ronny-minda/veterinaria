@@ -7,7 +7,9 @@ import Head from "next/head";
 import Layout from "~/components/layout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useEffect, useState } from "react";
+import { useSpring, animated } from "@react-spring/web";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -26,25 +28,73 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </Head>
 
       <SessionProvider session={session}>
-        <Layout>
-          <main className="relative w-screen">
-            <AnimatePresence>
-              <motion.div
-                key={router.route}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1, delay: 0 }}
-                className="absolute left-0 top-0 w-screen"
-              >
-                <Component {...pageProps} />
-              </motion.div>
-            </AnimatePresence>
-          </main>
-        </Layout>
+        <div className="svgTectura" style={{minHeight: "100vh"}}>
+          <Layout>
+            <main className="relative w-screen">
+              <AnimatePresence>
+                <motion.div
+                  key={router.route}
+                  initial={{ opacity: 0, position: "absolute" }}
+                  animate={{ opacity: 1, position: "relative" }}
+                  exit={{ opacity: 0, position: "absolute" }}
+                  transition={{ duration: 1, delay: 0 }}
+                  className="left-0 top-0 w-screen"
+                >
+                  <Component {...pageProps} />
+                </motion.div>
+              </AnimatePresence>
+            </main>
+          </Layout>
+        </div>
       </SessionProvider>
+
+      <Fondo />
     </>
   );
 };
+
+const Fondo = () => {
+
+  const [position, setPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  useEffect(() => {
+    const handleResize = (e: any) => {
+      const y = e.pageY - window.top.scrollY;
+      const x = e.pageX;
+      setPosition({
+        x,
+        y,
+      });
+    };
+
+    window.addEventListener("mousemove", handleResize);
+
+    // Limpieza del efecto
+    return () => {
+      window.removeEventListener("mousemove", handleResize);
+    };
+  }, []);
+
+  const mause = useSpring({
+    to: { x: position.x, y: position.y },
+  });
+   
+  return (
+    <>
+      <div className="h-screen w-screen fixed top-0 left-0 -z-10">
+        <animated.div
+          className="h-0 w-0 absolute top-0 left-0 z-10 bg-red-200 rounded-full"
+          style={{
+            ...mause,
+            boxShadow: "rgba(0, 0, 0, 0.15) 0px 0px 100px 80px",
+          }}
+        ></animated.div>
+      </div>
+    </>
+  )
+}
 
 export default api.withTRPC(MyApp);

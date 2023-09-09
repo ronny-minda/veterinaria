@@ -14,10 +14,10 @@ const Layout = ({ children }: { children: any }) => {
 
   return (
     <>
-      {router.pathname !== "aut-google" ? <Header /> : null}
+      <Header />
       {children}
-      {router.pathname !== "aut-google" ? <ConteWha /> : null}
-      {router.pathname !== "aut-google" ? <Loader /> : null}
+      <ConteWha />
+      {/* <Loader /> */}
     </>
   );
 };

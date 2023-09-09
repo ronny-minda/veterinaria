@@ -18,7 +18,7 @@ const Contacto = () => {
     e.preventDefault();
     const URL = "http://localhost:3000/api/email";
     const result = await axios.post(URL, envio);
-    console.log("result");
+    // console.log("result");
     if (result.statusText == "OK") {
       setAviso(true);
       setTimeout(() => {

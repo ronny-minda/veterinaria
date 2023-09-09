@@ -29,12 +29,12 @@ const Carrusel = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // console.log("setInterval");
+      // // console.log("setInterval");
 
       setActual((actual) => {
         let result;
         if (actual == imgCarrucel.length - 1) {
-          // console.log("reinicia");
+          // // console.log("reinicia");
           return (result = 0);
         }
         result = actual + 1;
@@ -48,7 +48,7 @@ const Carrusel = () => {
 
   const controlCarrusel = (e: any) => {
     e.stopPropagation();
-    console.log("cambio");
+    // console.log("cambio");
   };
 
   return (
@@ -58,9 +58,9 @@ const Carrusel = () => {
           className="absolute left-2 top-2/4 z-30 flex h-5 w-20 cursor-pointer items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
-            console.log(imgCarrucel.length);
+            // console.log(imgCarrucel.length);
             if (actual == imgCarrucel.length - 1) {
-              console.log("reinicia");
+              // console.log("reinicia");
               setActual(0);
               return;
             }
@@ -76,9 +76,9 @@ const Carrusel = () => {
           className="absolute right-2 top-2/4 z-30 flex h-5 w-20 cursor-pointer items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
-            console.log(imgCarrucel.length);
+            // console.log(imgCarrucel.length);
             if (actual == 0) {
-              console.log("reinicia");
+              // console.log("reinicia");
               setActual(imgCarrucel.length - 1);
               return;
             }
@@ -125,7 +125,7 @@ const Carrusel = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     setActual(key);
-                    // console.log(key);
+                    // // console.log(key);
                   }}
                   key={key}
                   className={`h-5 w-5 hover:bg-white ${

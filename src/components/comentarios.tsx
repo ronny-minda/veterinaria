@@ -25,12 +25,12 @@ const Comentarios = ({ img, color }: { img: string; color: string }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // console.log("setInterval");
+      // // console.log("setInterval");
 
       setEstado((estado) => {
         let result;
         if (estado == conte.length - 1) {
-          // console.log("reinicia");
+          // // console.log("reinicia");
           return (result = 0);
         }
         result = estado + 1;
