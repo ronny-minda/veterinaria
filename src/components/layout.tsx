@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: any }) => {
       <Header />
       {children}
       <ConteWha />
-      {/* <Loader /> */}
+      <Loader />
     </>
   );
 };
