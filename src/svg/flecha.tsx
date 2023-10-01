@@ -4,9 +4,10 @@ const Flecha = (props: any) => (
     xmlSpace="preserve"
     width={58}
     height={10}
-    style={{
-      enableBackground: "new 0 0 269 38.6",
-    }}
+    // style={{
+    //   enableBackground: "new 0 0 269 38.6",
+    // }}
+    stroke="0"
     viewBox="0 0 269 38.6"
     {...props}
   >

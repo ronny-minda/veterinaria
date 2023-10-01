@@ -6,8 +6,11 @@ import FlechaUp from "~/svg/flechaUp";
 import Head from "next/head";
 import Image from "next/image";
 import { string } from "zod";
+import { api } from "~/utils/api";
 
 const Nosotros = () => {
+
+
   return (
     <>
       <Head>

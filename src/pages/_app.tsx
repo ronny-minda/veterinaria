@@ -10,12 +10,39 @@ import { useRouter } from "next/router";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useEffect, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
+import { Toaster } from 'sonner'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const router = useRouter();
+  const [ stadoRuta, setStadoRuta ] = useState(true)
+  const { route, pathname } = useRouter();
+
+  const arrayPaht = pathname.split("/")
+
+  useEffect(()=> {
+    switch (arrayPaht[2]) {
+      case "pedidos":
+        setStadoRuta(false)
+        break;
+      case "buscar":
+        setStadoRuta(false)
+        break;
+      case "direccion":
+        setStadoRuta(false)
+        break;
+      case "detalles_de_la_cuenta":
+        setStadoRuta(false)
+      break;
+      case "lista_de_deseos":
+        setStadoRuta(false)
+      break;
+      default:
+        setStadoRuta(true)
+        break;
+    }
+  },[pathname])
 
   return (
     <>
@@ -31,24 +58,28 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <div className="svgTectura" style={{minHeight: "100vh"}}>
           <Layout>
             <main className="relative w-screen">
+
               <AnimatePresence>
                 <motion.div
-                  key={router.route}
+                  // key={stadoRuta?route:null}
+                  key={route}
                   initial={{ opacity: 0, position: "absolute" }}
                   animate={{ opacity: 1, position: "relative" }}
                   exit={{ opacity: 0, position: "absolute" }}
-                  transition={{ duration: 1, delay: 0 }}
+                  transition={{ duration: stadoRuta?1:0, delay: 0 }}
                   className="left-0 top-0 w-screen"
                 >
                   <Component {...pageProps} />
                 </motion.div>
               </AnimatePresence>
+
             </main>
           </Layout>
         </div>
       </SessionProvider>
 
       <Fondo />
+      <Toaster />
     </>
   );
 };

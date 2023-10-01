@@ -14,69 +14,110 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
-    posts Post[]
-}
-
-model Post {
-    id        Int     @id @default(autoincrement())
-    title     String
-    content   String?
-    published Boolean @default(false)
-    author    User    @relation(fields: [authorId], references: [id])
-    authorId  Int
-}
-
 // model Example {
-//     id        String   @id @default(cuid())
+//     id        Int      @id @default(autoincrement())
+//     name      String
 //     createdAt DateTime @default(now())
 //     updatedAt DateTime @updatedAt
+
+//     @@index([name])
 // }
 
-// // Necessary for Next auth
-// model Account {
-//     id                String  @id @default(cuid())
-//     userId            String
-//     type              String
-//     provider          String
-//     providerAccountId String
-//     refresh_token     String? // @db.Text
-//     access_token      String? // @db.Text
-//     expires_at        Int?
-//     token_type        String?
-//     scope             String?
-//     id_token          String? // @db.Text
-//     session_state     String?
-//     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId            String
 
-//     @@unique([provider, providerAccountId])
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    direccion     String?
+    password      String?
+    accounts      Account[]
+    sessions      Session[]
+    factura       Factura[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+// enum Role {
+//   USER
+//   ADMIN
 // }
 
-// model Session {
-//     id           String   @id @default(cuid())
-//     sessionToken String
-//     userId       String
-//     expires      DateTime
-//     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
+// TRANSACCION DE LA FACTURA
+model Factura {
+    id            String    @id @default(cuid())
+    flecha        DateTime
+    user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String
+    producto      Producto[]
+}
 
-// model User {
-//     id            String    @id @default(cuid())
-//     name          String?
-//     email         String?
-//     emailVerified DateTime?
-//     image         String?
-//     accounts      Account[]
-//     sessions      Session[]
-// }
+model Producto {
+    id            String    @id @default(cuid())
+    nombre        String?
+    cantidad      Int?
+    categoria     String?
+    descripcion   String?
+    precio        Int?
+    factura       Factura   @relation(fields: [facturaId], references: [id],  onDelete: Cascade)
+    facturaId     String
+    image         Image[]
+}
 
-// model VerificationToken {
-//     identifier String
-//     token      String
-//     expires    DateTime
+model Image {
+    id            String    @id @default(cuid())
+    src           String
+    producto      Producto  @relation(fields: [productoId], references: [id],  onDelete: Cascade)
+    productoId    String
+}
 
-//     @@unique([identifier, token])
-// }
+// TODOS LOS PRODUCTOS
+model AllProducto {
+    id            String    @id @default(cuid())
+    nombre        String?
+    cantidad      Int?
+    categoria     String?
+    descripcion   String?
+    precio        Int?
+    imagenes      ImageProducto[]
+}
+
+model ImageProducto {
+    id            String    @id @default(cuid())
+    src           String
+    producto      AllProducto  @relation(fields: [productoId], references: [id],  onDelete: Cascade)
+    productoId    String
+}

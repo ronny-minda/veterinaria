@@ -19,7 +19,17 @@ const getBaseUrl = () => {
 /** A set of type-safe react-query hooks for your tRPC API. */
 export const api = createTRPCNext<AppRouter>({
   config() {
+    
     return {
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            refetchInterval: false,
+          }
+        },
+      },
       /**
        * Transformer used for data de-serialization from the server.
        *

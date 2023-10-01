@@ -26,7 +26,7 @@ const Footer = () => {
               alt="logo"
               style={{ width: "200px", height: "44px", objectFit: "contain" }}
             /> */}
-            <Logo className="fill-white hover:fill-[#7f1d1d]" />
+            <Logo className="fill-white hover:fill-[#7f1d1d] h-[60px] w-[60px]" style={{transitionDuration: "0.4s"}} />
           </Link>
 
           <p className="mt-10" style={{ color: "#fff" }}>
@@ -36,7 +36,7 @@ const Footer = () => {
         </div>
         <div
           className="m-2 flex h-80 flex-col items-center justify-center"
-          style={{ maxWidth: "200px", width: "200px" }}
+          style={{ maxWidth: "200px", width: "200px"}}
         >
           <h4
             className=""

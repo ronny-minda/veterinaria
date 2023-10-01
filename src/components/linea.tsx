@@ -33,7 +33,7 @@ const Linea = () => {
       className="overflow-hidden"
       style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
     >
-      <h2 className="my-10 text-center text-3xl font-bold" style={{}}>
+      <h2 className="my-10 text-center text-3xl font-bold texto" style={{}}>
         NUESTAR HISTORIA
       </h2>
       {conten.map((value, key) => {
@@ -84,7 +84,7 @@ const Linea = () => {
                 style={{
                   width: "1px",
                   height: "100%",
-                  backgroundColor: "#bc9331",
+                  backgroundColor: "#B03E3E",
                 }}
               ></div>
               <div
@@ -94,7 +94,7 @@ const Linea = () => {
                   height: "12px",
                   top: "calc(50% - 6px)",
                   left: "calc(50% - 6px)",
-                  backgroundColor: "#bc9331",
+                  backgroundColor: "#B03E3E",
                 }}
               ></div>
               <div
@@ -104,7 +104,7 @@ const Linea = () => {
                   height: "1px",
                   top: "calc(50% - 1px)",
                   left: key % 2 !== 0 ? "calc(35% - 15px)" : "calc(65% - 15px)",
-                  backgroundColor: "#bc9331",
+                  backgroundColor: "#B03E3E",
                 }}
               ></div>
               <div
@@ -116,7 +116,7 @@ const Linea = () => {
                   left: key % 2 !== 0 ? "calc(10% - 25px)" : "calc(90% - 25px)",
 
                   fontSize: "30px",
-                  color: "#bc9331",
+                  color: "#B03E3E",
                 }}
               >
                 {value.año}
@@ -145,14 +145,14 @@ const Linea = () => {
                 style={{ height: "auto" }}
               >
                 <h3
-                  className="text-center font-bold lg:text-left"
+                  className="text-center font-bold lg:text-left texto"
                   style={{ fontSize: "30px" }}
                 >
                   {value.titulo}
                 </h3>
                 <p
                   className="text-center lg:text-left"
-                  style={{ color: "#545454" }}
+                  style={{ color: "#39404E" }}
                 >
                   {value.des}
                 </p>

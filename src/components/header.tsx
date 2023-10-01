@@ -21,6 +21,7 @@ import { signal } from "@preact/signals-react";
 import { ALLPRODUCTOSAPI, FAVORITOS, TIENDA, addProductoTienda, formatter, objProducto, scrollBody } from "~/store/gloval";
 import { useTransition, animated } from "@react-spring/web";
 import Imagen from "./imagen";
+import MenuUsuario from "./menuUsuario";
 
 const FondoOpaco = signal(false);
 const estadoMobile = signal(false);
@@ -57,6 +58,8 @@ const Header = () => {
       // console.log(window.scrollY)
       setScrolly(window.scrollY)
     };
+
+    handleScroll()
 
     window.addEventListener('scroll', handleScroll);
 
@@ -108,7 +111,7 @@ const Header = () => {
             ></div>
           </li>
           <Link href="/">
-            <Logo />
+            <Logo className="h-[60px] w-[60px] svg1" />
           </Link>
           <li className="group ml-2 hidden h-auto w-auto list-none lg:block">
             <Link
@@ -220,16 +223,11 @@ const Header = () => {
               status === "authenticated" && 
               <div className="group cursor-pointer h-full w-full">
                 <img
-                  className="relative h-full w-full rounded-full"
+                  className="relative h-full w-full rounded-full object-cover"
                   src={session.user.image?.toString()}
                   alt={session.user.name?.toString()}
                 />
-                <div
-                  onClick={() => signOut()}
-                  className="absolute top-full hidden bg-red-600 px-3 py-2 text-white group-hover:block"
-                >
-                  cerrar sesion
-                </div>
+                <MenuUsuario />
               </div>
             }
 
@@ -326,9 +324,9 @@ const CompoTienda = () => {
       <AnimatePresence>
         {estadoTienda.value && (
           <motion.div
-            initial={{ x: 400, opacity: 0 }}
+            initial={{ x: 500, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
+            exit={{ x: 500, opacity: 0 }}
             transition={{ type: "spring", bounce: 0.2 }}
             className="bgFondo fondoPerro1 fixed right-0 top-0 z-50 h-full w-[100%] sm:w-[500px]"
           >
@@ -377,7 +375,7 @@ const CompoTienda = () => {
                               />
                             </figure> */}
                             <div className="ml-[32px] mr-2 flex w-20 h-24 cursor-pointer">
-                              <Imagen className="" src={item.img} alt={item.img} modo={"contain"} />
+                              <Imagen className="" src={`${item.imagenes[0]?.src}`} alt={`${item.imagenes[0]?.src}`} modo={"contain"} />
                             </div>
                             <div className="mx-2 flex flex-col w-[150px]">
                               <span className="textoColor1 text-base font-bold">
@@ -535,9 +533,9 @@ const CompoMenu = () => {
       <AnimatePresence>
         {estadoMobile.value && (
           <motion.div
-            initial={{ x: 400, opacity: 0 }}
+            initial={{ x: 500, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
+            exit={{ x: 500, opacity: 0 }}
             transition={{ type: "spring", bounce: 0.2 }}
             className="bgFondo fixed right-0 top-0 z-50 flex h-full w-2/5 flex-col items-center justify-start lg:hidden"
           >
@@ -597,9 +595,9 @@ const CompoMenu = () => {
             </div>
 
             <motion.section
-              initial={{ x: 400, opacity: 0 }}
+              initial={{ x: 500, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 400, opacity: 0 }}
+              exit={{ x: 500, opacity: 0 }}
               transition={{ type: "tween", delay: 0.1 }}
               className="w-3/4"
             >
@@ -833,9 +831,9 @@ const CompoFavorito = () => {
       <AnimatePresence>
         {estadoFavorito.value && (
           <motion.div
-            initial={{ x: 400, opacity: 0 }}
+            initial={{ x: 500, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
+            exit={{ x: 500, opacity: 0 }}
             transition={{ type: "spring", bounce: 0.2 }}
             className="bgFondo fondoPerro2 fixed right-0 top-0 z-50 h-full w-[100%] sm:w-[500px]"
           >
@@ -875,7 +873,7 @@ const CompoFavorito = () => {
                         >
                           <div className="group relative flex w-full">
                             <div className="ml-[32px] mr-2 flex w-20 h-24 cursor-pointer">
-                              <Imagen className="" src={item.img} alt={item.img} modo={"contain"} />
+                              <Imagen className="" src={`${item.imagenes[0]?.src}`} alt={`${item.imagenes[0]?.src}`} modo={"contain"} />
                             </div>
                             <div className="mx-2 flex flex-col">
                               <span className="textoColor1 text-base font-bold">
@@ -1068,8 +1066,8 @@ const CompoLupa = () => {
                             >
                               <div className="group relative flex w-full">
                                 <div className="ml-[32px] mr-2 flex w-[115px] h-[155px] cursor-pointer">
-                                  <Imagen className="" modo="cover" src={value.img}
-                                    alt={value.img} />
+                                  <Imagen className="" modo="cover" src={`${value.imagenes[0]?.src}`}
+                                    alt={`${value.imagenes[0]?.src}`} />
                                 </div>
 
                                 <div className="flex flex-row sm:flex-col lg:flex-row">
@@ -1093,7 +1091,7 @@ const CompoLupa = () => {
                                 </div>
 
                                 <p className="texto flex-1 sm:block hidden">
-                                  {value.des}
+                                  {value.descripcion}
                                 </p>
                                 
 
@@ -1146,231 +1144,227 @@ const CompoAcceder = () => {
 
   return (
     <>
-
-        {status === "unauthenticated" ? (
-          <>
-            <AnimatePresence>
-              {estadoAcceder.value && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-slate-600"
-                  style={{ backgroundColor: "rgba(0, 0, 0, 0.35)" }}
-                  onClick={() => {
-                    cambioAcceder()
-                    setEstadoAccederCambio(true)
+      {status === "unauthenticated" ? (
+        <>
+          <AnimatePresence>
+            {estadoAcceder.value && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-slate-600"
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.35)" }}
+                onClick={() => {
+                  cambioAcceder()
+                  setEstadoAccederCambio(true)
+                }}
+              >
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
                   }}
+                  className="relative h-[480px] w-[480px] bgFondo bgFondo p-2 rounded uellas1"
                 >
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className="relative h-[480px] w-[480px] bgFondo bgFondo p-2 rounded uellas1"
-                  >
-                    <AnimatePresence>
-                      {estadoAccederCambio && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="absolute left-0 top-0 h-full w-full"
-                        >
-                          <h2 className="mb-2 mt-4 text-center text-3xl font-bold texto">
-                            Acceder
-                          </h2>
-                          <div className="mt-4 flex justify-center">
-                            <form
-                              className="w-[80%] space-y-4 md:space-y-6"
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                              }}
+                  <AnimatePresence>
+                    {estadoAccederCambio && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute left-0 top-0 h-full w-full"
+                      >
+                        <h2 className="mb-2 mt-4 text-center text-3xl font-bold texto">
+                          Acceder
+                        </h2>
+                        <div className="mt-4 flex justify-center">
+                          <form
+                            className="w-[80%] space-y-4 md:space-y-6"
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                            }}
+                          >
+                            <div>
+                              <label
+                                htmlFor="usuario"
+                                className="mb-2 block text-sm font-medium texto"
+                              >
+                                Usuario
+                              </label>
+                              <input
+                                // onChange={(e) => sesion(e)}
+                                // value={enviar.usuario}
+                                type="usuario"
+                                name="usuario"
+                                className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
+                                placeholder="usuario"
+                              />
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="Contraseña"
+                                className="mb-2 block text-sm font-medium texto"
+                              >
+                                Contraseña
+                              </label>
+                              <input
+                                // onChange={(e) => sesion(e)}
+                                // value={enviar.Contraseña}
+                                type="Contraseña"
+                                name="Contraseña"
+                                placeholder="••••••••"
+                                className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
+                              />
+                            </div>
+                            <button
+                              type="submit"
+                              className="w-full bg-[#B03E3E] hover:bg-[#8e2828] px-5 py-2.5 text-center text-sm text-[#F0F0F3] border border-[#B03E3E00] hover:border-[#B03E3E] active:border-[#B03E3E] font-medium active:outline-none rounded sombra2 textoColor1"
+                              style={{ transitionDuration: "0.3s", color: "#F0F0F3" }}
                             >
-                              <div>
-                                <label
-                                  htmlFor="usuario"
-                                  className="mb-2 block text-sm font-medium texto"
-                                >
-                                  Usuario
-                                </label>
-                                <input
-                                  // onChange={(e) => sesion(e)}
-                                  // value={enviar.usuario}
-                                  type="usuario"
-                                  name="usuario"
-                                  className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
-                                  placeholder="usuario"
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="Contraseña"
-                                  className="mb-2 block text-sm font-medium texto"
-                                >
-                                  Contraseña
-                                </label>
-                                <input
-                                  // onChange={(e) => sesion(e)}
-                                  // value={enviar.Contraseña}
-                                  type="Contraseña"
-                                  name="Contraseña"
-                                  placeholder="••••••••"
-                                  className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
-                                />
-                              </div>
-                              <button
-                                type="submit"
-                                className="w-full bg-[#B03E3E] hover:bg-[#8e2828] px-5 py-2.5 text-center text-sm text-[#F0F0F3] border border-[#B03E3E00] hover:border-[#B03E3E] active:border-[#B03E3E] font-medium active:outline-none rounded sombra2 textoColor1"
-                                style={{ transitionDuration: "0.3s", color: "#F0F0F3" }}
-                              >
-                                Iniciar sesión
-                              </button>
+                              Iniciar sesión
+                            </button>
 
-                              <button
-                                className="bgFondo flex justify-center w-full px-5 py-2.5 text-center text-sm font-medium texto hover:bg-[#f0f0f3] active:outline-none rounded sombra"
-                                style={{
-                                  border: "1px solid #d2d2d2",
-                                  transitionDuration: "0.3s",
-                                }}
-                                onClick={() => newWindow()}
-                              >
-                                <img src="/svg/google.svg" alt="google" className="object-contain mr-1 h-5 w-5"/>
-                                <span>Inicia sesión con Google</span>
-                              </button>
-
-                              <div className="flex w-full justify-center">
-                                <div className="text-slate-600">¿Sin cuenta?</div>
-                                <div
-                                  onClick={() =>
-                                    setEstadoAccederCambio(!estadoAccederCambio)
-                                  }
-                                  className="group ml-2 cursor-pointer font-bold text-[#B03E3E]"
-                                >
-                                  <div>Registrarse</div>
-                                  <div
-                                    className="w-0 bg-[#B03E3E] group-hover:w-full"
-                                    style={{
-                                      height: "2px",
-                                      transitionDuration: "0.3s",
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                    <AnimatePresence>
-                      {!estadoAccederCambio && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="absolute left-0 top-0 h-full w-full"
-                        >
-                          <h2 className="mb-2 mt-4 text-center text-3xl font-bold texto">
-                            Registrarse
-                          </h2>
-                          <div className="mt-4 flex justify-center">
-                            <form
-                              className="w-[80%] space-y-4 md:space-y-6"
-                              onSubmit={(e) => {
-                                e.preventDefault();
+                            <button
+                              className="bgFondo flex justify-center w-full px-5 py-2.5 text-center text-sm font-medium texto hover:bg-[#f0f0f3] active:outline-none rounded sombra"
+                              style={{
+                                border: "1px solid #d2d2d2",
+                                transitionDuration: "0.3s",
                               }}
+                              onClick={() => newWindow()}
                             >
-                              <div>
-                                <label
-                                  htmlFor="usuario"
-                                  className="mb-2 block text-sm font-medium texto"
-                                >
-                                  Usuario
-                                </label>
-                                <input
-                                  // onChange={(e) => sesion(e)}
-                                  // value={enviar.usuario}
-                                  type="usuario"
-                                  name="usuario"
-                                  className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
-                                  placeholder="usuario"
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="Email"
-                                  className="mb-2 block text-sm font-medium texto"
-                                >
-                                  Correo
-                                </label>
-                                <input
-                                  // onChange={(e) => sesion(e)}
-                                  // value={enviar.Email}
-                                  type="Email"
-                                  name="Email"
-                                  className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
-                                  placeholder="Email"
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="Contraseña"
-                                  className="mb-2 block text-sm font-medium texto"
-                                >
-                                  Contraseña
-                                </label>
-                                <input
-                                  // onChange={(e) => sesion(e)}
-                                  // value={enviar.Contraseña}
-                                  type="Contraseña"
-                                  name="Contraseña"
-                                  placeholder="••••••••"
-                                  className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[##f0f0f3b3]"
-                                />
-                              </div>
-                              <button
-                                type="submit"
-                                className="w-full bg-[#B03E3E] hover:bg-[#8e2828] px-5 py-2.5 text-center text-sm text-[#F0F0F3] border border-[#B03E3E00] hover:border-[#B03E3E] active:border-[#B03E3E] font-medium active:outline-none rounded sombra2 textoColor1"
-                                style={{ transitionDuration: "0.3s", color: "#F0F0F3" }}
+                              <img src="/svg/google.svg" alt="google" className="object-contain mr-1 h-5 w-5"/>
+                              <span>Inicia sesión con Google</span>
+                            </button>
+
+                            <div className="flex w-full justify-center">
+                              <div className="text-slate-600">¿Sin cuenta?</div>
+                              <div
+                                onClick={() =>
+                                  setEstadoAccederCambio(!estadoAccederCambio)
+                                }
+                                className="group ml-2 cursor-pointer font-bold text-[#B03E3E]"
                               >
-                                Registrarse
-                              </button>
-
-                              <div className="flex w-full justify-center">
-                                <div className="text-slate-600">
-                                  ¿Tienes una cuenta?
-                                </div>
+                                <div>Registrarse</div>
                                 <div
-                                  onClick={() =>
-                                    setEstadoAccederCambio(!estadoAccederCambio)
-                                  }
-                                  className="group ml-2 cursor-pointer font-bold text-[#B03E3E]"
-                                >
-                                  <div>Acceder</div>
-                                  <div
-                                    className="w-0 bg-[#B03E3E] group-hover:w-full"
-                                    style={{
-                                      height: "2px",
-                                      transitionDuration: "0.3s",
-                                    }}
-                                  ></div>
-                                </div>
+                                  className="w-0 bg-[#B03E3E] group-hover:w-full"
+                                  style={{
+                                    height: "2px",
+                                    transitionDuration: "0.3s",
+                                  }}
+                                ></div>
                               </div>
-                            </form>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        ) : null}
+                            </div>
+                          </form>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence>
+                    {!estadoAccederCambio && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute left-0 top-0 h-full w-full"
+                      >
+                        <h2 className="mb-2 mt-4 text-center text-3xl font-bold texto">
+                          Registrarse
+                        </h2>
+                        <div className="mt-4 flex justify-center">
+                          <form
+                            className="w-[80%] space-y-4 md:space-y-6"
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                            }}
+                          >
+                            <div>
+                              <label
+                                htmlFor="usuario"
+                                className="mb-2 block text-sm font-medium texto"
+                              >
+                                Usuario
+                              </label>
+                              <input
+                                // onChange={(e) => sesion(e)}
+                                // value={enviar.usuario}
+                                type="usuario"
+                                name="usuario"
+                                className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
+                                placeholder="usuario"
+                              />
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="Email"
+                                className="mb-2 block text-sm font-medium texto"
+                              >
+                                Correo
+                              </label>
+                              <input
+                                // onChange={(e) => sesion(e)}
+                                // value={enviar.Email}
+                                type="Email"
+                                name="Email"
+                                className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[#f0f0f3d1]"
+                                placeholder="Email"
+                              />
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="Contraseña"
+                                className="mb-2 block text-sm font-medium texto"
+                              >
+                                Contraseña
+                              </label>
+                              <input
+                                // onChange={(e) => sesion(e)}
+                                // value={enviar.Contraseña}
+                                type="Contraseña"
+                                name="Contraseña"
+                                placeholder="••••••••"
+                                className="sombraInto block w-full rounded bg-[#F0F0F3] border border-[#F0F0F3] p-2.5 text-gray-900 hover:border-[#fff] focus:border-[#fff] bg-[##f0f0f3b3]"
+                              />
+                            </div>
+                            <button
+                              type="submit"
+                              className="w-full bg-[#B03E3E] hover:bg-[#8e2828] px-5 py-2.5 text-center text-sm text-[#F0F0F3] border border-[#B03E3E00] hover:border-[#B03E3E] active:border-[#B03E3E] font-medium active:outline-none rounded sombra2 textoColor1"
+                              style={{ transitionDuration: "0.3s", color: "#F0F0F3" }}
+                            >
+                              Registrarse
+                            </button>
 
+                            <div className="flex w-full justify-center">
+                              <div className="text-slate-600">
+                                ¿Tienes una cuenta?
+                              </div>
+                              <div
+                                onClick={() =>
+                                  setEstadoAccederCambio(!estadoAccederCambio)
+                                }
+                                className="group ml-2 cursor-pointer font-bold text-[#B03E3E]"
+                              >
+                                <div>Acceder</div>
+                                <div
+                                  className="w-0 bg-[#B03E3E] group-hover:w-full"
+                                  style={{
+                                    height: "2px",
+                                    transitionDuration: "0.3s",
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      ) : null}
     </>
   )
 }
-
-
 
 export default Header;

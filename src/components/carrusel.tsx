@@ -1,10 +1,14 @@
 import Flecha from "~/svg/flecha";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+
 
 const Carrusel = () => {
   const [actual, setActual] = useState(0);
   const [screenWidth, setScreenWidth] = useState(0);
+
+  const ref = useRef(null)
+  const isInView = useInView(ref)
 
   const imgCarrucel = [
     "img/gatoVeterinaria.jpeg",
@@ -29,8 +33,6 @@ const Carrusel = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // // console.log("setInterval");
-
       setActual((actual) => {
         let result;
         if (actual == imgCarrucel.length - 1) {
@@ -51,8 +53,12 @@ const Carrusel = () => {
     // console.log("cambio");
   };
 
+  useEffect(() => {
+    console.log("Elementos en el viewport: ", isInView)
+  }, [isInView])
+
   return (
-    <section>
+    <section ref={ref}>
       <div className="relative w-full" style={{ height: "600px" }}>
         <div
           className="absolute left-2 top-2/4 z-30 flex h-5 w-20 cursor-pointer items-center justify-center"
@@ -72,13 +78,12 @@ const Carrusel = () => {
             className="hidden rotate-180 lg:block"
           />
         </div>
+
         <div
           className="absolute right-2 top-2/4 z-30 flex h-5 w-20 cursor-pointer items-center justify-center"
           onClick={(e) => {
             e.stopPropagation();
-            // console.log(imgCarrucel.length);
             if (actual == 0) {
-              // console.log("reinicia");
               setActual(imgCarrucel.length - 1);
               return;
             }
@@ -113,9 +118,10 @@ const Carrusel = () => {
                 );
               }
             })}
+            
           </AnimatePresence>
 
-          <div
+          {/* <div
             className=" absolute bottom-0 z-30 flex h-10 w-32 items-center justify-between lg:hidden"
             style={{ left: "calc(50% - 64px)" }}
           >
@@ -125,7 +131,6 @@ const Carrusel = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     setActual(key);
-                    // // console.log(key);
                   }}
                   key={key}
                   className={`h-5 w-5 hover:bg-white ${
@@ -133,8 +138,8 @@ const Carrusel = () => {
                   } cursor-pointer rounded-full border-2 border-white transition-colors`}
                 ></div>
               );
-            })}
-          </div>
+            })} 
+          </div> */}
 
           <div
             className="absolute left-1/2 z-30 flex scale-50 flex-col items-center justify-between md:scale-75 lg:scale-100"
@@ -145,7 +150,7 @@ const Carrusel = () => {
               left: "calc(50% - 350px)",
             }}
           >
-            <div className="relative h-14 w-36">
+            {/* <div className="relative h-14 w-36">
               <AnimatePresence>
                 {msgCarrucel.map((value, key) => {
                   if (actual == key) {
@@ -168,7 +173,7 @@ const Carrusel = () => {
                   }
                 })}
               </AnimatePresence>
-            </div>
+            </div> */}
 
             <div
               className="relative flex h-24 items-center justify-center"
@@ -199,7 +204,7 @@ const Carrusel = () => {
               </AnimatePresence>
             </div>
 
-            <div className="relative h-14 w-72">
+            {/* <div className="relative h-14 w-72">
               <AnimatePresence>
                 {msgCarrucel.map((value, key) => {
                   if (actual == key) {
@@ -222,7 +227,7 @@ const Carrusel = () => {
                   }
                 })}
               </AnimatePresence>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

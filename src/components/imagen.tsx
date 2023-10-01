@@ -1,13 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 
 
 const Imagen = ({src, alt, modo, className}: {src: string, alt: string, modo: "fill" | "contain" | "cover" | "none" | "scale-down", className: string}) => {
   const [ img, setImg ] = useState(false)
+  const [stado, setStado] = useState(false);
+
+  useEffect(()=> {
+    const time = setTimeout(() => {
+      setStado(!stado)
+    }, 1);
+    return ()=> clearTimeout(time)
+  },[])
+
   return (
     <>
+    {
+      stado && 
       <div className="relative h-full w-full">
-
           <motion.figure
             initial={{opacity: 0}}
             animate={{opacity: img?1:0}} 
@@ -40,6 +50,7 @@ const Imagen = ({src, alt, modo, className}: {src: string, alt: string, modo: "f
             </motion.div>
           } 
       </div>
+    }
     </>
   )
 }

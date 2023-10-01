@@ -18,6 +18,7 @@ const ConteWha = () => {
   useEffect(() => {
     // Agregar el event listener cuando el componente se monta
     window.addEventListener("scroll", handleScroll);
+    handleScroll()
 
     // Remover el event listener cuando el componente se desmonta
     return () => {

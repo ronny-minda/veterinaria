@@ -94,14 +94,14 @@ export default function Home() {
           />
         </div>
         <div
-          className="flex h-96 w-full items-center justify-center lg:w-1/2"
-          style={{ backgroundColor: "#f6f3e4" }}
+          className="flex h-96 w-full items-center justify-center lg:w-1/2 sombra1"
+          style={{ backgroundColor: "#f0f0f38c", border: "soid 1px #fff"}}
         >
           <div className="max-w-md">
-            <h2 className="text-3xl font-bold" style={{}}>
+            <h2 className="text-3xl textoColor1 font-bold">
               Juguetes y Diversión
             </h2>
-            <p className="mt-3 text-base" style={{ color: "#545454" }}>
+            <p className="mt-3 text-base" style={{ color: "#39404E" }}>
               ¿Quieres ver a tu mascota emocionada y feliz? Nuestra tienda de
               juguetes ofrece una amplia variedad de opciones para mantener a tu
               compañero peludo entretenido. Desde pelotas y juguetes
@@ -119,8 +119,8 @@ export default function Home() {
                 }}
                 className="flex h-6 w-40 items-center justify-between"
               >
-                <span>Leer mas</span>
-                <Flecha style={{ stroke: "#000" }} />
+                <span className="textoColor1">Leer mas</span>
+                <Flecha style={{ fill: "#B03E3E" }} />
               </motion.div>
             </div>
           </div>

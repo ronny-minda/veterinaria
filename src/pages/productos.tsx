@@ -10,25 +10,21 @@ import Equiz from "~/svg/equiz";
 import Footer from "~/components/footer";
 import FlechaUp from "~/svg/flechaUp";
 import Head from "next/head";
-import { ALLPRODUCTOSAPI, CATEGORIAS, FAVORITOS, TIENDA, addProductoFavorito, addProductoTienda, formatter, objProducto } from "~/store/gloval";
+import { ALLPRODUCTOSAPI, CATEGORIAS, FAVORITOS, TIENDA, addProductoFavorito, addProductoTienda, formatter, objProducto, filtro } from "~/store/gloval";
 import { signal } from "@preact/signals-react";
 import Imagen from "~/components/imagen";
 
-const filtro = signal<objProducto[]>([])
 const valorRango = signal(300)
 
 const filtroCategoria = (value: string) => filtro.value = ALLPRODUCTOSAPI.value.filter((valor)=> valor.categoria === value)
 const filtroRango = (value: number) => filtro.value = ALLPRODUCTOSAPI.value.filter((valor)=> valor.precio <= value)
 
-const addTienda = () => {
-
-}
 
 const Productos = () => {
 
-  useEffect(()=> {
-    filtro.value = ALLPRODUCTOSAPI.value
-  },[])
+  // useEffect(()=> {
+  //   filtro.value = ALLPRODUCTOSAPI.value
+  // },[])
 
   return (
     <>
@@ -36,7 +32,7 @@ const Productos = () => {
         <title>Productos</title>
       </Head>
       <section>
-        
+
         <h1
           className="my-6 text-center texto"
           style={{
@@ -148,12 +144,6 @@ const Acordeon1 = () => {
           style={{ borderColor: "#6767674d", boxShadow: aco?"inset 0px 7px 7px 0px rgba(174, 174, 192, 0.25)":"inset 0px 7px 7px 0px rgba(174, 174, 192, 0)" }}
           className="flex h-auto w-full cursor-pointer flex-col items-start justify-start overflow-hidden p-2"
         >
-          {/* <span style={{ width: "90%", height: "80%" }}>
-            Nuestra filosofía se centra en brindar atención integral, promover
-            el bienestar animal y fortalecer el vínculo humano-animal. Expertos
-            comprometidos contigo y tus mascotas.
-          </span> */}
-
           {CATEGORIAS.value.map((value, key) => {
             return (
               <button
@@ -246,9 +236,15 @@ const Producto = ({value}: {value: objProducto}) => {
       <figure
         className="relative flex h-[267px] w-full cursor-pointer flex-col items-center overflow-hidden rounded"
       >
-        <Link className="h-full w-full" href={`/producto/${value.nombre.replace(/ /g, "-")}`}>
-          <Imagen className={"h-full w-full scale-[1.03] object-contain group-hover:scale-110"} src={value.img} alt={value.img} modo={"contain"}/>
-        </Link>
+        <div onClick={()=> setDatalles(!datalles)} className="h-full w-full relative">
+          <div className="absolute top-0 left-0 h-full w-full scale-[1.03] object-contain group-hover:scale-110 opacity-100 group-hover:opacity-0" style={{transitionDuration: "0.3s"}}>
+            <Imagen className={""} src={`${value.imagenes[0]?.src}`} alt={`${value.imagenes[0]?.src}`} modo={"contain"}/>
+          </div>
+          <div className="absolute top-0 left-0 h-full w-full scale-[1.03] object-contain group-hover:scale-110 opacity-0 group-hover:opacity-100" style={{transitionDuration: "0.3s"}}>
+            <Imagen className={""} src={`${value.imagenes[1]?.src}`} alt={`${value.imagenes[1]?.src}`} modo={"contain"}/>
+          </div>
+          <div className="h-1/2 w-full absolute bottom-0 left-0 opacity-0 group-hover:opacity-100" style={{transitionDuration: "0.3s", background: "linear-gradient(0deg, rgba(0,0,0,0.5998774509803921) 0%, rgba(255,255,255,0) 100%)"}}></div>
+        </div>
         <div
           className="absolute bottom-6 z-10 flex h-[50px] w-[180px] scale-95 rounded bgFondo opacity-0 group-hover:bottom-8 group-hover:scale-100 group-hover:opacity-100"
           style={{ transitionDuration: "0.4s" }}
@@ -279,7 +275,7 @@ const Producto = ({value}: {value: objProducto}) => {
             />
           </button>
           <div className="border-l border-[#B03E3E]"></div>
-          <button className="flex h-full w-1/3 items-center justify-center">
+          <button onClick={()=> setDatalles(!datalles)} className="flex h-full w-1/3 items-center justify-center">
             <Anpliar
               className=" h-3/4 w-3/4 scale-[0.8] fill-none text-[#B03E3E] hover:scale-100"
               style={{ transitionDuration: "0.2s" }}
@@ -287,9 +283,11 @@ const Producto = ({value}: {value: objProducto}) => {
           </button>
         </div>
       </figure>
-      <h4 className="my-1 text-lg font-bold text-[#39404E] group-hover:text-[#B03E3E]" style={{transitionDuration: "0.2"}}>
-        {value.nombre}
-      </h4>
+      <Link className="h-full w-full" href={`/producto/${value.nombre.replace(/ /g, "-")}`}>
+        <h4 className="my-1 text-lg font-bold text-[#39404E] group-hover:text-[#B03E3E]" style={{transitionDuration: "0.2"}}>
+          {value.nombre}
+        </h4>
+      </Link>
       <p className="mb-2 text-[#39404E] group-hover:text-[#B03E3E]" style={{transitionDuration: "0.2"}}>{formatter.format(value.precio)}</p>
       {/* <span
         className="cursor-pointer border bg-white p-1 text-slate-600 hover:bg-slate-100"
@@ -310,73 +308,109 @@ const Producto = ({value}: {value: objProducto}) => {
               // document.body.style.overflowY = "auto";
             }}
           >
-            <div
-              onClick={(e) => {
-                setDatalles(!datalles);
-                // document.body.style.overflowY = "auto";
-              }}
-              className="absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#fcedbc] shadow-lg shadow-[#fff0] hover:bg-[#fce2bc] hover:shadow-slate-200"
-              style={{
-                transitionDuration: "0.4s",
-              }}
-            >
-              <Equiz
-                className=""
-                style={{
-                  height: "20px",
-                  with: "20px",
+
+            <div className="shadow-xl">
+              <div
+                onClick={(e) => {
+                  setDatalles(!datalles);
                 }}
-              />
+                className="sombra group absolute right-5 top-5 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full hover:shadow-slate-200 bgFondo"
+                style={{
+                  transitionDuration: "0.4s",
+                }}
+              >
+                <Equiz
+                  className="h-[25px] w-[25px] fill-[#B03E3E] drop-shadow-[15px_15px_16px_#F000] group-hover:drop-shadow-[15px_15px_17px_#F00]"
+                  style={{
+                    transitionDuration: "0.2s",
+                  }}
+                />
+              </div>
             </div>
+
+            {/* <p className="bg-red-400"></p> */}
             <div
               onClick={(e) => e.stopPropagation()}
-              className="scroll block h-4/5 w-4/5 flex-col overflow-y-auto bg-white md:flex md:flex-row"
-              // style={{ overflowY: "scroll" }}
+              className="scroll block h-4/5 w-4/5 flex-col overflow-y-auto md:flex md:flex-row bgFondo"
+              style={{borderRadius: "10px"}}
             >
               <div className="flex h-[400px] w-full md:h-full md:w-1/2">
                 <div className="h-full w-24 p-2">
-                  <img
+                  {/* <img
                     className="mb-3 h-20 w-full cursor-pointer border border-transparent object-cover active:border-black"
                     src={value.img}
                     alt={value.nombre}
-                  />
-                  <img
+                  /> */}
+                  <div className="mb-3 h-20 w-full cursor-pointer border border-transparent active:border-black">
+                    <Imagen 
+                      className=""
+                      src={`${value.imagenes[0]}`}
+                      alt={value.nombre}
+                      modo="cover"
+                    />
+                  </div>
+                  {/* <img
                     className="mb-3 h-20 w-full cursor-pointer border border-transparent object-cover active:border-black"
                     src={value.img}
                     alt={value.nombre}
-                  />
+                  /> */}
+                  <div className="mb-3 h-20 w-full cursor-pointer border border-transparent active:border-black">
+                    <Imagen 
+                      className=""
+                      src={`${value.imagenes[0]}`}
+                      alt={value.nombre}
+                      modo="cover"
+                    />
+                  </div>
                 </div>
                 <div className="flex h-full flex-1 items-center justify-center p-4">
-                  <img
+                  {/* <img
                     className="h-3/4 w-full object-cover"
                     src={value.img}
                     alt={value.nombre}
-                  />
+                  /> */}
+                  <div className="h-3/4 w-full">
+                    <Imagen 
+                      className=""
+                      src={`${value.imagenes[0]}`}
+                      alt={value.nombre}
+                      modo="cover"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="h-[1000px] w-full p-5 md:h-full md:w-1/2">
                 <div className="mb-3 text-slate-400">
-                  inicio / {value.nombre}
+                  <Link href="/" >inicio</Link> / {value.nombre}
                 </div>
-                <h3 className="mb-3 text-2xl font-bold text-[#7f1d1d]">
-                  {value.nombre}
-                </h3>
-                <div className="mb-3 text-[#c5b892]">
-                  {value.precio}
+                <Link className="texto1" href={`/producto/${value.nombre.replace(/ /g, "-")}`}>
+                  <h3 className="mb-3 text-2xl font-bold">
+                    {value.nombre}
+                  </h3>
+                </Link>
+                <div className="mb-3 text-lg textoColor1">
+                  {formatter.format(value.precio)}
                 </div>
-                <p className="mb-3 text-slate-700">{value.des}</p>
+                <p className="my-8 text-lg texto">{value.descripcion}</p>
                 <button
                   className="my-2 flex w-full items-center justify-center bg-[#7f1d1d] py-2 text-white hover:bg-[#b24242]"
                   style={{ transitionDuration: "0.3s" }}
+                  onClick={()=> {
+                    addProductoTienda(value)
+                  }}
                 >
                   Añadir al carrito
                 </button>
-                <button className="group my-2 flex w-full items-center justify-center border-2 border-[#7f1d1d] py-2 text-[#7f1d1d] hover:border-[#b24242] hover:text-[#b24242]">
+                <button className="my-2 flex w-full items-center justify-center border-2 border-[#7f1d1d] py-2 text-[#7f1d1d] hover:border-[#b24242] hover:text-[#b24242]"
+                onClick={()=> {
+                  addProductoFavorito(value)
+                }}
+                >
                   <div className="h-full">
                     <CorazonSvg
-                      className="mr-2 h-8 w-8 scale-[1] fill-[#a1936500] text-[#7f1d1d] group-hover:fill-[#7f1d1d]"
-                      style={{ transitionDuration: "0.4s" }}
+                      className="mr-2 h-8 w-8 scale-[1] fill-[#a1936500] text-[#7f1d1d] hover:fill-[#7f1d1d]"
+                      style={{ transitionDuration: "0.4s", fill: favorito?"#B03E3E":"#a1936500" }}
                       stroke="currentColor"
                       strokeLinecap="round"
                       strokeLinejoin="round"
